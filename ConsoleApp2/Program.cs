@@ -7,8 +7,9 @@
         static void Main(string[] args) {
             var numberParser = new NumberParser();
             numberParser.GetUserInput();
-            numberParser.ProcessInput();
-            numberParser.DisplayUniqueNumber();
+           var parsednumbers= numberParser.ProcessInput();
+                //do whatever you want wiht it here
+            numberParser.DisplayParsedNumbers();
             numberParser.DisplayErrors();
         }
 
@@ -80,7 +81,7 @@
         }
 
 
-        public void DisplayUniqueNumber() {
+        public void DisplayParsedNumbers() {
             Console.WriteLine("numbers extracted from user input");
             if (rawNumbersList.Count > 0)
             {
