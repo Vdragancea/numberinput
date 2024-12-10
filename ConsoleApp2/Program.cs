@@ -7,14 +7,27 @@
     {
         static void Main(string[] args)
         {
+            var numberParser = new NumberParser();
+            numberParser.GetUserInput();
+            numberParser.ProcessInput();
+            numberParser.DisplayUniqueNumber();
+            numberParser.DisplayErrors(); 
+        } 
+
+    }
+
+    class NumberParser {
+        public int[] UniqueNumber { get; set; } = [];
+        public List<string> ProcessingErrors { get; set; } = [];
+        private string userInput = "";
+        private List<int> rawNumbersList = [];
+
+        public void  GetUserInput() {
             Console.WriteLine("Enter number  ");
-            var userInput = Console.ReadLine();
-            var resultedArray = ProcessInput(userInput);
-            //do whatever you want with    resultedArray array
+            this.userInput= Console.ReadLine();
         }
 
-        private static int[] ProcessInput(string? userInput)
-        {
+        public void ProcessInput() {
             string[] numberGroups = [];
 
             if (!string.IsNullOrEmpty(userInput))
@@ -22,11 +35,7 @@
                 //if null then return a empty array(developers decision).
                 //nothing   is specified about throwing errors on null input so consider it valid case
                 numberGroups = userInput!.Split(",");
-            }
-
-
-            List<int> rawNumbersList = [];
-            List<string> errors = [];
+            } 
 
             foreach (var numberGroup in numberGroups)
             {
@@ -37,48 +46,13 @@
                 }
                 catch (Exception ex)
                 {
-                    errors.Add(ex.Message);
+                    this.ProcessingErrors.Add(ex.Message);
                 }
 
             }
-
-            DisplayUniqueNumber(rawNumbersList);
-            DisplayErrors(errors);
-            return [.. rawNumbersList];
         }
 
-        private static void DisplayUniqueNumber(List<int> rawNumbersList)
-        {
-            Console.WriteLine("numbers extracted from user input");
-            if (rawNumbersList.Count > 0)
-            {
-                var uniquevalues = new SortedSet<int>(rawNumbersList);                 //  if now sorting was required then  =>  rawNumbersList.ToHashSet();  would work 
-                Console.Write(string.Join(" ", uniquevalues));
-            }
-            else
-            {
-                Console.WriteLine("No valid numbers found in input");
-            }
-
-        }
-
-        private static void DisplayErrors(List<string> errors)
-        {
-            Console.WriteLine();
-            if (errors.Count > 0)
-            {
-                Console.WriteLine("Errors found ");
-                errors.ForEach(e => Console.WriteLine(e));
-            }
-            else
-            {
-                Console.WriteLine("No errors encuntered during processing");
-            }
-
-        }
-
-        private static IEnumerable<int> GetNumbers(string numberGroup)
-        {
+        private static IEnumerable<int> GetNumbers(string numberGroup) {
             if (numberGroup.Contains('-'))
             {
                 return GetNumbersFromRange(numberGroup);
@@ -86,8 +60,7 @@
             return [int.Parse(numberGroup)]; // will throw exception if not int. if i have time will rewrite it to have a user friend format
         }
 
-        private static IEnumerable<int> GetNumbersFromRange(string numberGroup)
-        {
+        private static IEnumerable<int> GetNumbersFromRange(string numberGroup) {
             var rangeParts = numberGroup.Split('-');
             if (rangeParts.Length != 2)
             {
@@ -102,6 +75,35 @@
             }
 
             return Enumerable.Range(rangeStart, rangeEnd - rangeStart + 1);
+        }
+
+
+        public  void DisplayUniqueNumber() {
+            Console.WriteLine("numbers extracted from user input");
+            if (rawNumbersList.Count > 0)
+            {
+                var uniquevalues = new SortedSet<int>(rawNumbersList);                 //  if now sorting was required then  =>  rawNumbersList.ToHashSet();  would work 
+                Console.Write(string.Join(" ", uniquevalues));
+            }
+            else
+            {
+                Console.WriteLine("No valid numbers found in input");
+            }
+
+        }
+
+        public   void DisplayErrors() {
+            Console.WriteLine();
+            if (this.ProcessingErrors.Count > 0)
+            {
+                Console.WriteLine("Errors found ");
+                this.ProcessingErrors.ForEach(e => Console.WriteLine(e));
+            }
+            else
+            {
+                Console.WriteLine("No errors encuntered during processing");
+            }
+
         }
 
 
