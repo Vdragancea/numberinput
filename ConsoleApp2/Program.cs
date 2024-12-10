@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-
+    //no classes were used here due to the fact that i  wanted concetrate on the  funcationality rather then structure taking incosdiretation small amount o time ai got after read teh email  
     internal class Program
     {
         static void Main(string[] args)
