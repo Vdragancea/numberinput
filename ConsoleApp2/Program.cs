@@ -2,31 +2,31 @@
 {
     using System;
     using System.Collections.Generic;
-     internal class Program
+    internal class Program
     {
-        static void Main(string[] args)
-        {
+        static void Main(string[] args) {
             var numberParser = new NumberParser();
             numberParser.GetUserInput();
             numberParser.ProcessInput();
             numberParser.DisplayUniqueNumber();
-            numberParser.DisplayErrors(); 
-        } 
+            numberParser.DisplayErrors();
+        }
 
     }
 
-    class NumberParser {
-        public int[] UniqueNumber { get; set; } = [];
-        public List<string> ProcessingErrors { get; set; } = [];
+    class NumberParser
+    {
+        private int[] uniqueNumber = [];
+        private List<string> processingErrors = [];
         private string userInput = "";
         private List<int> rawNumbersList = [];
 
-        public void  GetUserInput() {
+        public void GetUserInput() {
             Console.WriteLine("Enter number  ");
-            this.userInput= Console.ReadLine();
+            this.userInput = Console.ReadLine();
         }
 
-        public void ProcessInput() {
+        public int[] ProcessInput() {
             string[] numberGroups = [];
 
             if (!string.IsNullOrEmpty(userInput))
@@ -34,7 +34,7 @@
                 //if null then return a empty array(developers decision).
                 //nothing   is specified about throwing errors on null input so consider it valid case
                 numberGroups = userInput!.Split(",");
-            } 
+            }
 
             foreach (var numberGroup in numberGroups)
             {
@@ -45,10 +45,13 @@
                 }
                 catch (Exception ex)
                 {
-                    this.ProcessingErrors.Add(ex.Message);
+                    this.processingErrors.Add(ex.Message);
                 }
 
             }
+
+            this.uniqueNumber = new SortedSet<int>(rawNumbersList).ToArray();                 //  if now sorting was required then  =>  rawNumbersList.ToHashSet();  would work 
+            return this.uniqueNumber;
         }
 
         private static IEnumerable<int> GetNumbers(string numberGroup) {
@@ -77,12 +80,11 @@
         }
 
 
-        public  void DisplayUniqueNumber() {
+        public void DisplayUniqueNumber() {
             Console.WriteLine("numbers extracted from user input");
             if (rawNumbersList.Count > 0)
             {
-                var uniquevalues = new SortedSet<int>(rawNumbersList);                 //  if now sorting was required then  =>  rawNumbersList.ToHashSet();  would work 
-                Console.Write(string.Join(" ", uniquevalues));
+                Console.Write(string.Join(" ", this.uniqueNumber));
             }
             else
             {
@@ -91,12 +93,12 @@
 
         }
 
-        public   void DisplayErrors() {
+        public void DisplayErrors() {
             Console.WriteLine();
-            if (this.ProcessingErrors.Count > 0)
+            if (this.processingErrors.Count > 0)
             {
                 Console.WriteLine("Errors found ");
-                this.ProcessingErrors.ForEach(e => Console.WriteLine(e));
+                this.processingErrors.ForEach(e => Console.WriteLine(e));
             }
             else
             {
